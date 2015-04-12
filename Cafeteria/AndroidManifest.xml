@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.cafeteria"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="9"
+        android:targetSdkVersion="21" />
+ <uses-permission android:name="android.permission.INTERNET" />
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/logo"
+        android:name="com.cafeteria.CafeteriaApplication"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.cafeteria.activity.SplashActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="sensorPortrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <activity
+            android:name="com.cafeteria.activity.LoginActivity"
+            android:screenOrientation="sensorPortrait" >
+            </activity>
+            
+        <activity
+            android:name="com.cafeteria.activity.SignupActivity"
+            android:screenOrientation="sensorPortrait" >
+            </activity>
+            
+         <activity
+            android:name="com.cafeteria.activity.HomeActivity"
+            android:screenOrientation="sensorPortrait" >
+            </activity>
+    </application>
+
+</manifest>
