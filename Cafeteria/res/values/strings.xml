@@ -7,6 +7,9 @@
     
     <string name="drawer_close"></string>
     <string name="drawer_open"></string>
+    <string name="str_change_password"><u>Change password</u></string>
+    
+    
     
  <string-array name="side_menu">
         <item>Cafe</item>

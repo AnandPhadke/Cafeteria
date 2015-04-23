@@ -55,21 +55,40 @@
         </EditText>
     </LinearLayout>
 
-    <RadioButton
-        android:id="@+id/tvRememberMe"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/rlRememberMeContainer"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/llETContainer"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:button="@drawable/selector_remember_me"
-        android:text="Remember me" />
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp" >
+
+        <CheckBox
+            android:id="@+id/cbRememberMe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:checked="false"
+            android:text="Remember me" />
+
+        <TextView
+            android:id="@+id/tvChangePassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/cbRememberMe"
+            android:text="@string/str_change_password"
+            android:visibility="gone" />
+    </RelativeLayout>
 
     <Button
         android:id="@+id/btnLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvRememberMe"
+        android:layout_below="@+id/rlRememberMeContainer"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_marginTop="10dp"

@@ -32,7 +32,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ImageView;
 
-@SuppressWarnings("UnusedDeclaration")
 public class RoundedImageView extends ImageView {
 
   // Constants for tile mode attributes

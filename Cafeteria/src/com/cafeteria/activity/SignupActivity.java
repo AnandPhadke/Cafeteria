@@ -1,5 +1,6 @@
 package com.cafeteria.activity;
 
+import com.cafeteria.Constant;
 import com.cafeteria.R;
 import com.cafeteria.Utils;
 import com.parse.ParseException;
@@ -8,19 +9,20 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class SignupActivity extends ActionBarActivity implements OnClickListener {
+public class SignupActivity extends Activity implements OnClickListener {
 		private Button btnSignup;
 		private EditText etUsername;
 		private EditText etPassword;
@@ -33,12 +35,13 @@ public class SignupActivity extends ActionBarActivity implements OnClickListener
 		private String userId="";
 		private ProgressDialog progressDialog;
 		private String confirmPasswordtxt="";
+		private CheckBox cbAdmin;
 
 		@Override
 		protected void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_signup);
-			getSupportActionBar().setTitle("Signup");
+			getActionBar().setTitle("Signup");
 			btnSignup = (Button)findViewById(R.id.btnSignup);
 			btnSignup.setOnClickListener(this);
 			etUsername = (EditText)findViewById(R.id.etUsername);
@@ -46,7 +49,7 @@ public class SignupActivity extends ActionBarActivity implements OnClickListener
 			etConfirmPassword = (EditText)findViewById(R.id.etConfirmPassword);
 			etEmployeeName = (EditText)findViewById(R.id.etEmployeeName);
 			etUserId = (EditText)findViewById(R.id.etUserId);
-			
+			cbAdmin = (CheckBox)findViewById(R.id.cbAdmin);
 			
 			
 			
@@ -78,8 +81,10 @@ public class SignupActivity extends ActionBarActivity implements OnClickListener
 				ParseUser user = new ParseUser();
 					user.setUsername(usernametxt);
 					user.setPassword(passwordtxt);
-					user.put("employee_name", employeeName);
-					user.put("user_id", userId);
+					user.put(Constant.EMPLOYEE_NAME, employeeName);
+					user.put(Constant.USER_ID, userId);
+					user.put(Constant.IS_ADMIN, cbAdmin.isChecked());
+					
 					user.signUpInBackground(new SignUpCallback() {
 						
 						@Override

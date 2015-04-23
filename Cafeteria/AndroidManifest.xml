@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="9"
+        android:minSdkVersion="11"
         android:targetSdkVersion="21" />
  <uses-permission android:name="android.permission.INTERNET" />
     <application
@@ -37,6 +37,11 @@
             
          <activity
             android:name="com.cafeteria.activity.HomeActivity"
+            android:screenOrientation="sensorPortrait" >
+            </activity>
+            
+         <activity
+            android:name="com.cafeteria.activity.ChangePasswordActivity"
             android:screenOrientation="sensorPortrait" >
             </activity>
     </application>
