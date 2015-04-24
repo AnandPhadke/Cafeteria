@@ -3,6 +3,7 @@ package com.cafeteria.activity;
 import com.cafeteria.Constant;
 import com.cafeteria.R;
 import com.cafeteria.Utils;
+import com.cafeteria.dashboard.StudentDashboardActivity;
 import com.cafeteria.session_manager.UserSession;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -64,7 +65,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	        	etPassword.setText(UserSession.getInstance(this).getPassword());
 	        	checkBox.setChecked(true);
 	        	if(UserSession.getInstance(this).isSession()){
-	        		Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
+	        		Intent intent = new Intent(LoginActivity.this,HomeBaseActivity.class);
 					startActivity(intent);
 					finish();
 	        	}
@@ -138,7 +139,13 @@ public class LoginActivity extends Activity implements OnClickListener {
 							Toast.makeText(getApplicationContext(),
 									"Successfully Logged in",
 									Toast.LENGTH_LONG).show();
-							Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
+							
+							Intent intent;
+							if(user.getBoolean(Constant.IS_ADMIN)){
+								intent = new Intent(LoginActivity.this,HomeBaseActivity.class);
+							}else{
+								intent = new Intent(LoginActivity.this,StudentDashboardActivity.class);
+							}
 							startActivity(intent);
 							finish();
 						} else {

@@ -19,7 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class HomeActivity extends Activity implements OnClickListener {
+public  class HomeBaseActivity extends Activity implements OnClickListener {
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
