@@ -21,6 +21,12 @@ import android.widget.TextView;
 
 public  class HomeBaseActivity extends Activity implements OnClickListener {
 
+	
+	
+	
+	
+	
+	
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
