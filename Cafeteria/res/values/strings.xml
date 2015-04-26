@@ -18,6 +18,18 @@
         <item>Performance Rating</item>
         <item>Pending swap report</item>
     </string-array>
+    
+ <string-array name="side_menu_user">
+        <item>Schedule</item>
+        <item>Enter Availibility</item>
+        <item>Cancel shift</item>
+    </string-array>
+    
+ <string-array name="side_menu_admin">
+        <item>Schedule</item>
+        <item>Enter Availibility</item>
+        <item>Cancel shift</item>
+    </string-array>
    
 
 </resources>

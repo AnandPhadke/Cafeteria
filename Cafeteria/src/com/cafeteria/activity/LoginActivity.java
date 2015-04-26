@@ -64,11 +64,15 @@ public class LoginActivity extends Activity implements OnClickListener {
 	        	etUsername.setText(UserSession.getInstance(this).getUsername());
 	        	etPassword.setText(UserSession.getInstance(this).getPassword());
 	        	checkBox.setChecked(true);
-	        	if(UserSession.getInstance(this).isSession()){
-	        		Intent intent = new Intent(LoginActivity.this,HomeBaseActivity.class);
+	        	Intent intent;
+				if(UserSession.getInstance(this).isAdmin()){
+					//intent = new Intent(LoginActivity.this,HomeBaseActivity.class);
+					Toast.makeText(LoginActivity.this, "Admin dashboard comming soon ...", Toast.LENGTH_SHORT).show();
+				}else{
+					intent = new Intent(LoginActivity.this,StudentDashboardActivity.class);
 					startActivity(intent);
 					finish();
-	        	}
+				}
 	        	
 	        	//login(UserSession.getInstance(this).getUsername(), UserSession.getInstance(this).getPassword());
 	        }
@@ -142,12 +146,14 @@ public class LoginActivity extends Activity implements OnClickListener {
 							
 							Intent intent;
 							if(user.getBoolean(Constant.IS_ADMIN)){
-								intent = new Intent(LoginActivity.this,HomeBaseActivity.class);
+								//intent = new Intent(LoginActivity.this,HomeBaseActivity.class);
+								Toast.makeText(LoginActivity.this, "Admin dashboard comming soon ...", Toast.LENGTH_SHORT).show();
 							}else{
 								intent = new Intent(LoginActivity.this,StudentDashboardActivity.class);
+								startActivity(intent);
+								finish();
 							}
-							startActivity(intent);
-							finish();
+							
 						} else {
 							Toast.makeText(
 									getApplicationContext(),

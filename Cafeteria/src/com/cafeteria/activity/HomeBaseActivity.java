@@ -2,6 +2,7 @@ package com.cafeteria.activity;
 
 import com.cafeteria.R;
 import com.cafeteria.session_manager.UserSession;
+import com.cafeteria.student.ScheduleActivity;
 import com.parse.ParseUser;
 
 import android.annotation.SuppressLint;
@@ -16,33 +17,35 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 public  class HomeBaseActivity extends Activity implements OnClickListener {
-
-	
-	
-	
-	
-	
 	
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
-	private String[] sideMenuTitles;
+	protected String[] sideMenuTitles;
 	private TextView tvLogout;
 	private TextView tvAdminStatus;
+	private FrameLayout content_frame;
 	@SuppressLint("NewApi") @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_home);
-		  mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-	        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-	       getActionBar().setDisplayHomeAsUpEnabled(true);
+		 getActionBar().setDisplayHomeAsUpEnabled(true);
 	        getActionBar().setHomeButtonEnabled(true);
 	        getActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
-	        sideMenuTitles = getResources().getStringArray(R.array.side_menu);
+			}
+	
+	@Override
+	public void setContentView(int layoutResID) {
+		super.setContentView(R.layout.activity_home);
+		content_frame = (FrameLayout)findViewById(R.id.content_frame);
+		  mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+	        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+	      
+	      // sideMenuTitles = getResources().getStringArray(R.array.side_menu);
 	        tvLogout =(TextView)findViewById(R.id.tvLogout);
 	        tvAdminStatus=(TextView)findViewById(R.id.tvAdminStatus);
 	        if(UserSession.getInstance(this).isAdmin())
@@ -57,8 +60,21 @@ public  class HomeBaseActivity extends Activity implements OnClickListener {
 
 				@Override
 				public void onItemClick(AdapterView<?> arg0, View arg1,
-						int arg2, long arg3) {
+						int position, long arg3) {
 			        mDrawerLayout.closeDrawer(mDrawerList);
+			        if(UserSession.getInstance(HomeBaseActivity.this).isAdmin()){
+			        	
+			        }else{
+			        	switch (position) {
+						case 0:
+							startActivity(new Intent(HomeBaseActivity.this,ScheduleActivity.class));
+							break;
+
+						default:
+							break;
+						}
+			        }
+			        
 				}
 			});
 	        mDrawerToggle = new ActionBarDrawerToggle(
@@ -77,12 +93,19 @@ public  class HomeBaseActivity extends Activity implements OnClickListener {
 	            }
 	        };
 	        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+	        	content_frame.removeAllViews();
+	        	View view =View.inflate(this, layoutResID,null);
+	        	content_frame.addView(view);
 	}
+	
 	
 	@Override
     public boolean onOptionsItemSelected(MenuItem item) {
          // The action bar home/up action should open or close the drawer.
          // ActionBarDrawerToggle will take care of this.
+		
+		
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }

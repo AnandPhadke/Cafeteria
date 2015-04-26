@@ -50,6 +50,7 @@
             android:background="@drawable/drawable_edit_text_bg"
             android:ems="10"
             android:hint="password"
+            android:inputType="textWebPassword"
             android:padding="10dp"
             android:textColor="@color/color_button_text" >
         </EditText>
