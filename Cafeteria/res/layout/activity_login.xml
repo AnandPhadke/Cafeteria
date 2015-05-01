@@ -35,6 +35,7 @@
             android:ems="10"
             android:hint="username"
             android:padding="10dp"
+            android:imeOptions="actionNext"
             android:textColor="@color/color_button_text" >
 
             <requestFocus />

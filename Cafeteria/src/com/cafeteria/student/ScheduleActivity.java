@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.cafeteria.Constant;
 import com.cafeteria.R;
+import com.cafeteria.Utils;
 import com.cafeteria.dashboard.CafeteriaAdapter;
 import com.cafeteria.objects.CafeteriaSchedule;
 import com.parse.FindCallback;
@@ -33,6 +34,7 @@ import com.parse.ParseUser;
 
 public class ScheduleActivity extends Activity implements OnClickListener, OnPageChangeListener {
 
+	private static final String TAG = "ScheduleActivity";
 	private ImageView ivPrev;
 	private ImageView ivNext;
 	private TextView tvMonth;
@@ -73,15 +75,16 @@ public class ScheduleActivity extends Activity implements OnClickListener, OnPag
 						CafeteriaSchedule cafe = new CafeteriaSchedule();
 						cafe.cafe_name = x.getString("cafe_name");
 						cafe.date=x.getDate("schedule_date");
+						cafe.calenderDate=Utils.DateToCalendar(x.getDate("schedule_date"));
 						Log.v(getClass().getName(), "date   "+x.getDate("schedule_date").toString());
 						cafe.day=x.getInt("day");
-						cafe.start_time = x.getString("start_time");
-						cafe.end_time = x.getString("end_time");
+						cafe.start_time = Utils.DateToCalendar(x.getDate("start_time")).get(Calendar.HOUR_OF_DAY)+"";
+						cafe.end_time =  Utils.DateToCalendar(x.getDate("end_time")).get(Calendar.HOUR_OF_DAY)+"";
 						data.add(cafe);
 					}
 					
 					Log.v(getClass().getName(), "size   "+data.size());
-					ArrayList<CafeteriaSchedule> currentMonthDayData = getCurrentMonthData(data,currentDay);
+					ArrayList<CafeteriaSchedule> currentMonthDayData = getCurrentMonthData(data,currentDay,currentMonth+1);
 					CafeteriaAdapter adapter = new CafeteriaAdapter(ScheduleActivity.this, currentMonthDayData);
 					lstData.setAdapter(adapter);
 				}
@@ -89,12 +92,15 @@ public class ScheduleActivity extends Activity implements OnClickListener, OnPag
 		});
 	}
 
-	protected ArrayList<CafeteriaSchedule> getCurrentMonthData(ArrayList<CafeteriaSchedule> allData,int cDay) {
+	protected ArrayList<CafeteriaSchedule> getCurrentMonthData(ArrayList<CafeteriaSchedule> allData,int cDay,int setCurrentMonth) {
+		
 		ArrayList<CafeteriaSchedule> currentMonthData = new ArrayList<CafeteriaSchedule>();
 		for (int i = 0; i < allData.size(); i++) {
-			if(currentMonth == allData.get(i).date.getMonth()){
-				Log.v(getClass().getName(), "day   "+cDay +"  date  "+allData.get(i).date.getDay());
-				if(cDay==allData.get(i).date.getDay())
+			Log.v(getClass().getName(), "day   "+cDay +"  date  "+(allData.get(i).calenderDate.get(Calendar.DATE)-1));
+			Log.v(getClass().getName(), "month   "+setCurrentMonth +"  monthDate  "+ (allData.get(i).calenderDate.get(Calendar.MONTH)+1));
+
+			if(setCurrentMonth == (allData.get(i).calenderDate.get(Calendar.MONTH)+1)){
+				if(cDay==(allData.get(i).calenderDate.get(Calendar.DATE)-1))
 					currentMonthData.add(allData.get(i));
 			}
 		}
@@ -287,31 +293,40 @@ public class ScheduleActivity extends Activity implements OnClickListener, OnPag
 
 	@Override
 	public void onClick(View v) {
+		
 		switch (v.getId()) {
+		
 		case R.id.ivNext:
 			showNextPreviousMonthDates(true);
+			ArrayList<CafeteriaSchedule> currentMonthDayData = getCurrentMonthData(data,scheduleDay,sheduleMonth);
+			CafeteriaAdapter adapter = new CafeteriaAdapter(ScheduleActivity.this, currentMonthDayData);
+			lstData.setAdapter(adapter);
 			break;
 		case R.id.ivPrev:
 			showNextPreviousMonthDates(false);
+			ArrayList<CafeteriaSchedule> currentMonthDayDataPrev = getCurrentMonthData(data,scheduleDay,sheduleMonth);
+			CafeteriaAdapter adapterPrev = new CafeteriaAdapter(ScheduleActivity.this, currentMonthDayDataPrev);
+			lstData.setAdapter(adapterPrev);
 			break;
 		}
 	}
 
 	@Override
-	public void onPageScrollStateChanged(int arg0) {
-		// TODO Auto-generated method stub
+	public void onPageScrollStateChanged(int day) {
 		
 	}
 
 	@Override
 	public void onPageScrolled(int arg0, float arg1, int arg2) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void onPageSelected(int position) {
-		
+		Log.v(TAG, "pos  "+position);
+		ArrayList<CafeteriaSchedule> currentMonthDayData = getCurrentMonthData(data,position+1,sheduleMonth);
+		CafeteriaAdapter adapter = new CafeteriaAdapter(ScheduleActivity.this, currentMonthDayData);
+		lstData.setAdapter(adapter);
 	}
 
 }

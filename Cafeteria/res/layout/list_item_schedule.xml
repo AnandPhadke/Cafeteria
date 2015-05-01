@@ -13,6 +13,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="21dp"
+        android:src="@drawable/ic_launcher"
         android:layout_marginTop="05dp"
         android:contentDescription="@null"
          />
