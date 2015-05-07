@@ -3,6 +3,7 @@ package com.cafeteria.activity;
 import com.cafeteria.Constant;
 import com.cafeteria.R;
 import com.cafeteria.Utils;
+import com.cafeteria.dashboard.AdminDashboardActivity;
 import com.cafeteria.dashboard.StudentDashboardActivity;
 import com.cafeteria.session_manager.UserSession;
 import com.parse.LogInCallback;
@@ -67,7 +68,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 	        	Intent intent;
 				if(UserSession.getInstance(this).isAdmin()){
 					//intent = new Intent(LoginActivity.this,HomeBaseActivity.class);
-					Toast.makeText(LoginActivity.this, "Admin dashboard comming soon ...", Toast.LENGTH_SHORT).show();
+					//Toast.makeText(LoginActivity.this, "Admin dashboard comming soon ...", Toast.LENGTH_SHORT).show();
+					 intent = new Intent(LoginActivity.this,AdminDashboardActivity.class);
+						startActivity(intent);
 				}else{
 					intent = new Intent(LoginActivity.this,StudentDashboardActivity.class);
 					startActivity(intent);
@@ -147,7 +150,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 							Intent intent;
 							if(user.getBoolean(Constant.IS_ADMIN)){
 								//intent = new Intent(LoginActivity.this,HomeBaseActivity.class);
-								Toast.makeText(LoginActivity.this, "Admin dashboard comming soon ...", Toast.LENGTH_SHORT).show();
+							//	Toast.makeText(LoginActivity.this, "Admin dashboard comming soon ...", Toast.LENGTH_SHORT).show();
+								 intent = new Intent(LoginActivity.this,AdminDashboardActivity.class);
+								startActivity(intent);
 							}else{
 								intent = new Intent(LoginActivity.this,StudentDashboardActivity.class);
 								startActivity(intent);

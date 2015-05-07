@@ -21,7 +21,7 @@ public class StudentDashboardActivity extends HomeBaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		sideMenuTitles = getResources().getStringArray(R.array.side_menu_user);
-		setContentView(R.layout.student_dashboard_activity);
+		setContentView(R.layout.activity_student_dashboard);
 		tvSchedule = (TextView)findViewById(R.id.tvSchedule);
 		tvSchedule.setOnClickListener(this);
 	}

@@ -70,7 +70,6 @@ public class ScheduleActivity extends Activity implements OnClickListener, OnPag
 			@Override
 			public void done(List<ParseObject> results, ParseException e) {
 				if(e==null){
-					
 					for (ParseObject x : results) {
 						CafeteriaSchedule cafe = new CafeteriaSchedule();
 						cafe.cafe_name = x.getString("cafe_name");
@@ -78,8 +77,8 @@ public class ScheduleActivity extends Activity implements OnClickListener, OnPag
 						cafe.calenderDate=Utils.DateToCalendar(x.getDate("schedule_date"));
 						Log.v(getClass().getName(), "date   "+x.getDate("schedule_date").toString());
 						cafe.day=x.getInt("day");
-						cafe.start_time = Utils.DateToCalendar(x.getDate("start_time")).get(Calendar.HOUR_OF_DAY)+"";
-						cafe.end_time =  Utils.DateToCalendar(x.getDate("end_time")).get(Calendar.HOUR_OF_DAY)+"";
+						//cafe.start_time = Utils.DateToCalendar(x.getDate("start_time")).get(Calendar.HOUR_OF_DAY)+"";
+						//cafe.end_time =  Utils.DateToCalendar(x.getDate("end_time")).get(Calendar.HOUR_OF_DAY)+"";
 						data.add(cafe);
 					}
 					
