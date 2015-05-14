@@ -74,9 +74,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 				}else{
 					intent = new Intent(LoginActivity.this,StudentDashboardActivity.class);
 					startActivity(intent);
-					finish();
+					
 				}
-	        	
+				finish();
 	        	//login(UserSession.getInstance(this).getUsername(), UserSession.getInstance(this).getPassword());
 	        }
 		
@@ -153,6 +153,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 							//	Toast.makeText(LoginActivity.this, "Admin dashboard comming soon ...", Toast.LENGTH_SHORT).show();
 								 intent = new Intent(LoginActivity.this,AdminDashboardActivity.class);
 								startActivity(intent);
+								finish();
 							}else{
 								intent = new Intent(LoginActivity.this,StudentDashboardActivity.class);
 								startActivity(intent);

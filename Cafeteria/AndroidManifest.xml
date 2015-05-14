@@ -54,6 +54,16 @@
             android:name="com.cafeteria.student.ScheduleActivity"
             android:screenOrientation="sensorPortrait" >
         </activity>
+        
+        <activity
+            android:name="com.cafeteria.student.ActivityEnterAvaialibility"
+            android:screenOrientation="sensorPortrait" >
+        </activity>
+        <activity
+            android:name="com.cafeteria.admin.ActivityAssignShift"
+            android:screenOrientation="sensorPortrait" >
+        </activity>
+        
     </application>
 
 </manifest>

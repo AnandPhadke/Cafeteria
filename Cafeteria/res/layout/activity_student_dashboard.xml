@@ -54,6 +54,7 @@
                 android:src="@drawable/ic_launcher"
                 android:drawableTop="@drawable/cancel"
                 android:text="Cancel shift"
+                android:id="@+id/tvCancelShift"
                 android:textColor="@android:color/black" />
 
             <View

@@ -19,11 +19,11 @@
             android:orientation="horizontal" >
 
             <TextView
-                android:id="@+id/tvSchedule"
+                android:id="@+id/tvAssignShift"
                 style="@style/DashboardButton"
                 android:contentDescription="@null"
                 android:drawableTop="@drawable/schedule"
-                android:text="Schedule"
+                android:text="Assign shift"
                 android:textColor="@android:color/black" />
 
             <View
@@ -32,12 +32,12 @@
                 android:background="@android:color/darker_gray" />
 
             <TextView
-                android:id="@+id/tvEnterAvailability"
+                android:id="@+id/tvOperatingHours"
                 style="@style/DashboardButton"
                 android:contentDescription="@null"
                 android:drawableTop="@drawable/availibility"
                 android:src="@drawable/ic_launcher"
-                android:text="Enter availability"
+                android:text="Cafe operating \nhours"
                 android:textColor="@android:color/black" />
         </LinearLayout>
 
@@ -54,6 +54,7 @@
                 android:src="@drawable/ic_launcher"
                 android:drawableTop="@drawable/cancel"
                 android:text="Cancel shift"
+                android:visibility="invisible"
                 android:textColor="@android:color/black" />
 
             <View
