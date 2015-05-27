@@ -26,6 +26,7 @@ import com.cafeteria.R;
 import com.cafeteria.Utils;
 import com.cafeteria.dashboard.CafeteriaAdapter;
 import com.cafeteria.objects.CafeteriaSchedule;
+import com.cafeteria.session_manager.UserSession;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -64,22 +65,34 @@ public class ScheduleActivity extends Activity implements OnClickListener, OnPag
 
 	private void downloadData() {
 		ParseQuery<ParseObject> query =ParseQuery.getQuery(Constant.CAFE_SCHEDULE);
-		
+		//query.whereEqualTo("username",UserSession.getInstance(this).getUsername());
 		query.findInBackground(new FindCallback<ParseObject>() {
 			
 			@Override
 			public void done(List<ParseObject> results, ParseException e) {
 				if(e==null){
+					Log.v(getClass().getName(), "saved username   "+UserSession.getInstance(ScheduleActivity.this).getUsername());
 					for (ParseObject x : results) {
+					//	Log.v(getClass().getName(), "date   "+x.getDate("schedule_date").toString());
+					//	Log.v(getClass().getName(), "username   "+x.getString("username"));
+						
+						if(x.getString("username")!=null){
+						if(x.getString("username").equalsIgnoreCase(UserSession.getInstance(ScheduleActivity.this).getUsername())){
 						CafeteriaSchedule cafe = new CafeteriaSchedule();
 						cafe.cafe_name = x.getString("cafe_name");
-						cafe.date=x.getDate("schedule_date");
-						cafe.calenderDate=Utils.DateToCalendar(x.getDate("schedule_date"));
-						Log.v(getClass().getName(), "date   "+x.getDate("schedule_date").toString());
-						cafe.day=x.getInt("day");
-						//cafe.start_time = Utils.DateToCalendar(x.getDate("start_time")).get(Calendar.HOUR_OF_DAY)+"";
-						//cafe.end_time =  Utils.DateToCalendar(x.getDate("end_time")).get(Calendar.HOUR_OF_DAY)+"";
+						if(x.getDate("schedule_date")!=null){
+							cafe.date=x.getDate("schedule_date");
+							cafe.calenderDate=Utils.DateToCalendar(x.getDate("schedule_date"));
+						}
+							if(x.getInt("day")!=0)
+								cafe.day=x.getInt("day");
+						if(x.getDate("start_time")!=null)
+						cafe.start_time = Utils.DateToCalendar(x.getDate("start_time")).get(Calendar.HOUR_OF_DAY)+"";
+						if(x.getDate("end_time")!=null)
+						cafe.end_time =  Utils.DateToCalendar(x.getDate("end_time")).get(Calendar.HOUR_OF_DAY)+"";
 						data.add(cafe);
+						}
+						}
 					}
 					
 					Log.v(getClass().getName(), "size   "+data.size());

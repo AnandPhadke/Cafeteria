@@ -104,12 +104,12 @@ public class LoginActivity extends Activity implements OnClickListener {
 				Toast.makeText(this, "Please insert all fields", Toast.LENGTH_SHORT).show();
 				return;
 			}
+			UserSession.getInstance(this).setUsername(usernametxt);
+			UserSession.getInstance(this).setPassword(passwordtxt);
 			if (checkBox.isChecked()) {
 				UserSession.getInstance(this).setRememberme(true);
-				UserSession.getInstance(this).setUsername(usernametxt);
-				UserSession.getInstance(this).setPassword(passwordtxt);
             } else {
-               UserSession.getInstance(this).clearSession();
+               //UserSession.getInstance(this).clearSession();
             }
 			
 			login(usernametxt,passwordtxt);

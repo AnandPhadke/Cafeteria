@@ -77,12 +77,16 @@ public class ActivityEnterAvaialibility extends Activity implements
 			break;
 
 		case R.id.btnSubmit:
-			if(TextUtils.isEmpty(etDate.getText().toString()) && TextUtils.isEmpty(etFrom.getText().toString()) && TextUtils.isEmpty(etTo.getText().toString()) ){
+			btnSubmit.setOnClickListener(null);
+			pd = Utils.showProgressDialog(this);
+			if(TextUtils.isEmpty(etDate.getText().toString()) && etFrom.getText().toString().equals("") && etTo.getText().toString().equals("") ){
+				pd.cancel();
 				Toast.makeText(ActivityEnterAvaialibility.this, "Please enter all fields", Toast.LENGTH_SHORT).show();
+				
 			}else{
 				submitAvailibility();	
 			}
-			
+			btnSubmit.setOnClickListener(this);
 			break;
 		default:
 			break;
@@ -90,13 +94,17 @@ public class ActivityEnterAvaialibility extends Activity implements
 	}
 
 	private void submitAvailibility() {
-		pd = Utils.showProgressDialog(this);
 		ParseUser user = null;
 		try {
 			user = ParseUser.logIn(UserSession.getInstance(this).getUsername(),UserSession.getInstance(this).getPassword());
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		if(user==null){
+			pd.cancel();
+			Toast.makeText(ActivityEnterAvaialibility.this, "User session vanishes logout and then login again", Toast.LENGTH_SHORT).show();
+			return;
 		}
 		user.put(Constant.A_DATE, etDate.getText().toString());
 		user.put(Constant.A_FROM, etFrom.getText().toString());
@@ -107,6 +115,7 @@ public class ActivityEnterAvaialibility extends Activity implements
 			public void done(ParseException e) {
 				pd.cancel();
 				if(e ==null){
+					Toast.makeText(ActivityEnterAvaialibility.this, "Availibility added successfully", Toast.LENGTH_SHORT).show();
 				}else{
 					Toast.makeText(ActivityEnterAvaialibility.this, "Error in update availibility", Toast.LENGTH_SHORT).show();
 				}

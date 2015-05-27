@@ -3,6 +3,7 @@ package com.cafeteria.activity;
 import com.cafeteria.Constant;
 import com.cafeteria.R;
 import com.cafeteria.Utils;
+import com.cafeteria.objects.UserObject;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -92,15 +93,41 @@ public class SignupActivity extends Activity implements OnClickListener {
 							progressDialog.dismiss();
 							if (e == null) {
 								// Show a simple Toast message upon successful registration
-								Toast.makeText(getApplicationContext(),
-										"Successfully Signed up",
-										Toast.LENGTH_LONG).show();
-								finish();
+								
+								ParseObject parseObject = new ParseObject("live_users");
+								parseObject.put("username", usernametxt);
+								parseObject.put("password", passwordtxt.toString());
+								parseObject.saveInBackground(new SaveCallback() {
+									
+									@Override
+									public void done(ParseException e) {
+										
+										if(e==null){
+											Toast.makeText(getApplicationContext(),
+													"Successfully Signed up",
+													Toast.LENGTH_LONG).show();
+											finish();
+										}else{
+
+											//Log.e(getClass().getName(), "exception   "+e.getMessage());
+											Toast.makeText(getApplicationContext(),
+													"Sign up Error", Toast.LENGTH_LONG)
+													.show();
+										
+										}
+										
+										
+									}
+								});
+								
 							} else {
+								
+
 								Log.e(getClass().getName(), "exception   "+e.getMessage());
 								Toast.makeText(getApplicationContext(),
 										"Sign up Error", Toast.LENGTH_LONG)
 										.show();
+							
 							}
 						}
 					});

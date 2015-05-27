@@ -15,6 +15,7 @@ public class UserObject {
 	public String a_date="";
 	public String a_from="";
 	public String a_to="";
+	public String objectId="";
 	
 	@Override
 	public String toString() {

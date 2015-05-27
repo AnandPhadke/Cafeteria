@@ -1,10 +1,17 @@
 package com.cafeteria;
 
+import com.cafeteria.activity.SplashActivity;
+import com.cafeteria.dashboard.AdminDashboardActivity;
 import com.parse.Parse;
 import com.parse.ParseACL;
+import com.parse.ParseException;
+import com.parse.ParsePush;
 import com.parse.ParseUser;
+import com.parse.PushService;
+import com.parse.SaveCallback;
 
 import android.app.Application;
+import android.util.Log;
 
 public class CafeteriaApplication extends Application {
 	 private static final String YOUR_APPLICATION_ID = "61Zw6zggyxZWauUrSx18xrilUl7KJ3pZ3SPDa1PV";
@@ -23,5 +30,9 @@ public class CafeteriaApplication extends Application {
         defaultACL.setPublicReadAccess(true);
  
         ParseACL.setDefaultACL(defaultACL, true);
+        
+        PushService.setDefaultPushCallback(this, AdminDashboardActivity.class);
+        
+       
 	}
 }

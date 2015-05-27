@@ -17,8 +17,11 @@ import com.cafeteria.activity.HomeBaseActivity;
 import com.cafeteria.session_manager.UserSession;
 import com.cafeteria.student.ActivityEnterAvaialibility;
 import com.cafeteria.student.ScheduleActivity;
+import com.parse.ParseAnalytics;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseUser;
+import com.parse.PushService;
 import com.parse.SaveCallback;
 
 public class StudentDashboardActivity extends HomeBaseActivity {
@@ -34,6 +37,13 @@ public class StudentDashboardActivity extends HomeBaseActivity {
 		super.onCreate(savedInstanceState);
 		sideMenuTitles = getResources().getStringArray(R.array.side_menu_user);
 		setContentView(R.layout.activity_student_dashboard);
+		 ParseAnalytics.trackAppOpened(getIntent());
+	      //  PushService.setDefaultPushCallback(this,AdminDashboardActivity.class);
+	       // ParseInstallation.getCurrentInstallation().saveInBackground();
+	        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+	        installation.put("username", UserSession.getInstance(this).getUsername());
+	        installation.saveInBackground();
+		
 		init();
 
 	}
@@ -93,7 +103,14 @@ public class StudentDashboardActivity extends HomeBaseActivity {
 			user = ParseUser.logIn(UserSession.getInstance(this).getUsername(),UserSession.getInstance(this).getPassword());
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
+			pd.cancel();
 			e.printStackTrace();
+		}
+		if(user ==null){
+			pd.cancel();
+			Toast.makeText(StudentDashboardActivity.this, "User session vanishes logout and then login again", Toast.LENGTH_SHORT).show();
+			return;
+		
 		}
 		user.put(Constant.A_DATE, "");
 		user.put(Constant.A_FROM, "");
@@ -104,6 +121,7 @@ public class StudentDashboardActivity extends HomeBaseActivity {
 			public void done(ParseException e) {
 				pd.cancel();
 				if(e ==null){
+					Toast.makeText(StudentDashboardActivity.this, "Availibility cancelled", Toast.LENGTH_SHORT).show();
 				}else{
 					Toast.makeText(StudentDashboardActivity.this, "Error in update availibility", Toast.LENGTH_SHORT).show();
 				}

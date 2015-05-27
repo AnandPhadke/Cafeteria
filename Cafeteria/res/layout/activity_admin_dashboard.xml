@@ -32,12 +32,12 @@
                 android:background="@android:color/darker_gray" />
 
             <TextView
-                android:id="@+id/tvOperatingHours"
+                android:id="@+id/tvCancel"
                 style="@style/DashboardButton"
                 android:contentDescription="@null"
-                android:drawableTop="@drawable/availibility"
-                android:src="@drawable/ic_launcher"
-                android:text="Cafe operating \nhours"
+                android:drawableTop="@drawable/cancel"
+                android:src="@drawable/cancel"
+                android:text="Cancel shift"
                 android:textColor="@android:color/black" />
         </LinearLayout>
 
@@ -51,10 +51,10 @@
             <TextView
                 style="@style/DashboardButton"
                 android:contentDescription="@null"
-                android:src="@drawable/ic_launcher"
-                android:drawableTop="@drawable/cancel"
-                android:text="Cancel shift"
-                android:visibility="invisible"
+                android:drawableTop="@drawable/availibility"
+                android:text="Enter operating \nhours"
+                android:id="@+id/tvOperatingHours"
+                android:visibility="visible"
                 android:textColor="@android:color/black" />
 
             <View
@@ -65,7 +65,10 @@
             <TextView
                 style="@style/DashboardButton"
                 android:contentDescription="@null"
-                android:src="@drawable/ic_launcher"
+                android:drawableTop="@drawable/ic_action"
+                 android:textColor="@android:color/black" 
+                 android:id="@+id/tvCancelOperatingHours"
+                android:text="Cancel operating \nhours"
                 android:visibility="invisible" />
         </LinearLayout>
 

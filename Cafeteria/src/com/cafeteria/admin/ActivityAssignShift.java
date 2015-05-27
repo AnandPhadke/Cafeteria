@@ -1,20 +1,30 @@
 package com.cafeteria.admin;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.DateSorter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.cafeteria.Constant;
@@ -25,12 +35,15 @@ import com.cafeteria.session_manager.UserSession;
 import com.cafeteria.student.ActivityEnterAvaialibility;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.parse.SendCallback;
 
-public class ActivityAssignShift extends Activity {
+public class ActivityAssignShift extends Activity implements OnClickListener {
 	
 	private Spinner spinnerUserList;
 	private Spinner spinnerCafe;
@@ -44,6 +57,7 @@ public class ActivityAssignShift extends Activity {
 	protected ArrayList<String> listOfCafe;
 	protected String assignedCafe="";
 	private Button btnAssign;
+	protected UserObject selectedUser;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,15 +70,17 @@ public class ActivityAssignShift extends Activity {
 	}
 
 	private void init() {
-		spinnerUserList = (Spinner)findViewById(R.id.spinnerUserList);
 		spinnerCafe= (Spinner)findViewById(R.id.spinnerCafe);
 		spinnerCafe.setPrompt("Select cafe");
+		spinnerUserList = (Spinner)findViewById(R.id.spinnerUserList);
 		spinnerUserList.setPrompt("Select user");
 		llAvailable = (LinearLayout)findViewById(R.id.llAvailable);
         tvNotAvailable= (TextView)findViewById(R.id.tvNotAvailable);
         tvDate = (TextView)findViewById(R.id.tvDate);
         tvFrom = (TextView)findViewById(R.id.tvFrom);
+        tvFrom.setOnClickListener(this);
 		tvTo = (TextView)findViewById(R.id.tvTo);
+		tvTo.setOnClickListener(this);
 		//spinnerUserList.set
 		
 		spinnerUserList.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -72,19 +88,21 @@ public class ActivityAssignShift extends Activity {
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
 					int pos, long arg3) {
-					UserObject user = array.get(pos);
-					if (user==null){
+					selectedUser = array.get(pos);
+					if (selectedUser==null){
 						return;
 					}
-					if(user.a_date==null ||user.a_date.equals("")){
+					if(selectedUser.a_date==null ||selectedUser.a_date.equals("")){
 						tvNotAvailable.setVisibility(View.VISIBLE);
 						llAvailable.setVisibility(View.GONE);
+						btnAssign.setVisibility(View.GONE);
 					}else{
 						tvNotAvailable.setVisibility(View.GONE);
 						llAvailable.setVisibility(View.VISIBLE);
-						tvDate.setText(user.a_date);
-						tvFrom.setText(user.a_from);
-						tvTo.setText(user.a_to);
+						tvDate.setText(selectedUser.a_date);
+						tvFrom.setText(selectedUser.a_from);
+						tvTo.setText(selectedUser.a_to);
+						btnAssign.setVisibility(View.VISIBLE);
 					}
 			}
 
@@ -125,24 +143,98 @@ public class ActivityAssignShift extends Activity {
 		pd = Utils.showProgressDialog(this);
 		ParseUser user = null;
 		try {
-			user = ParseUser.logIn(UserSession.getInstance(this).getUsername(),UserSession.getInstance(this).getPassword());
+			Log.v(getClass().getName(), "username"+selectedUser.userName);
+			ParseQuery<ParseObject> query = ParseQuery.getQuery("live_users");
+			query.whereEqualTo("username", ""+selectedUser.userName.toString());
+			ParseObject p= query.getFirst();
+			//ParseUser.getQuery().get(selectedUser.objectId);
+			
+			user = ParseUser.logIn(p.getString("username"),p.getString("password"));
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		if(user==null){
+			pd.cancel();
+			Toast.makeText(ActivityAssignShift.this, "Something is wrong logout then login again", Toast.LENGTH_SHORT).show();
+			return;
 		}
 		user.put("assign_cafe", assignedCafe);
 		user.saveInBackground(new SaveCallback() {
 			
 			@Override
 			public void done(ParseException e) {
-				pd.cancel();
+				
 				if(e ==null){
-					Toast.makeText(ActivityAssignShift.this, "Successfully assign cafe!!!", Toast.LENGTH_SHORT).show();
+					
+					ParseQuery<ParseInstallation> query = ParseInstallation.getQuery(); 
+					query.whereEqualTo("username", selectedUser.userName);    
+					ParsePush push = new ParsePush();
+					push.setQuery(query);
+					push.setMessage( "Admin assigned "+assignedCafe+" cafe to you");
+					push.sendInBackground();
+					
 				}else{
 					Toast.makeText(ActivityAssignShift.this, "Error in assign shift", Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
+		
+		
+		ParseObject parseObject = new ParseObject(Constant.CAFE_SCHEDULE);
+		parseObject.put("username", ""+selectedUser.userName);
+		parseObject.put("cafe_name",""+assignedCafe);
+		
+		if(!tvDate.getText().toString().equals("")){
+			DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+			Date dateSchedule = null;
+			try {
+				dateSchedule = formatter.parse(tvDate.getText().toString()+" 00:00");
+			} catch (java.text.ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			parseObject.put("schedule_date",dateSchedule );
+		}
+		if(!tvFrom.getText().toString().equals("")){
+			DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+			Date timeFrom = null;
+			try {
+				timeFrom = formatter.parse(tvDate.getText().toString()+" "+tvFrom.getText().toString());
+			} catch (java.text.ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			parseObject.put("start_time", timeFrom);
+		}
+		if(!tvTo.getText().toString().equals("")){
+			DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+			Date timeFrom = null;
+			try {
+				timeFrom = formatter.parse(tvDate.getText().toString()+" "+tvTo.getText().toString());
+			} catch (java.text.ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			parseObject.put("end_time", timeFrom);
+		}
+		parseObject.saveInBackground(new SaveCallback() {
+			
+			@Override
+			public void done(ParseException e) {
+				pd.cancel();
+				if(e==null){
+					Toast.makeText(ActivityAssignShift.this, "Successfully assign cafe!!!", Toast.LENGTH_SHORT).show();	
+				}
+				
+			}
+		});
+		
+		
+		
+		
+		
+		
 	}
 
 	private void fetchAvailableUser() {
@@ -167,6 +259,8 @@ public class ActivityAssignShift extends Activity {
 							userObject.a_from = parseUser.getString("a_from");
 							userObject.a_to = parseUser.getString("a_to");
 							userObject.userName =parseUser.getUsername();
+							userObject.objectId = parseUser.getObjectId();
+							//userObject.password= parseUser.getPa
 							array.add(userObject);
 						}
 					}
@@ -206,6 +300,51 @@ public class ActivityAssignShift extends Activity {
 		});
 	}
 
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.tvFrom:
+			showDialog(888);
+			break;
+		case R.id.tvTo:
+			showDialog(777);
+			break;
+		}
+
+	}
+
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		Calendar c = Calendar.getInstance();
+		// TODO Auto-generated method stub
+		if (id == 888) {
+			return new TimePickerDialog(this, fromTimeListener,
+					c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), false);
+		}
+		if (id == 777) {
+			return new TimePickerDialog(this, toTimeListener,
+					c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), false);
+		}
+		return null;
+	}
+
 	
+
+	private TimePickerDialog.OnTimeSetListener fromTimeListener = new TimePickerDialog.OnTimeSetListener() {
+
+		@Override
+		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+			tvFrom.setText(hourOfDay + ":" + minute);
+		}
+	};	
+
+	private TimePickerDialog.OnTimeSetListener toTimeListener = new TimePickerDialog.OnTimeSetListener() {
+
+		@Override
+		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+			tvTo.setText(hourOfDay + ":" + minute);
+		}
+	};
+
 
 }
