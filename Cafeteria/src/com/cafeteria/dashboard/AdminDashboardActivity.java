@@ -19,8 +19,10 @@ import com.cafeteria.Utils;
 import com.cafeteria.activity.HomeBaseActivity;
 import com.cafeteria.activity.SplashActivity;
 import com.cafeteria.admin.ActivityAssignShift;
+import com.cafeteria.admin.CafeOperatingScheduleActivity;
+import com.cafeteria.admin.CancelOperatingHoursActivity;
 import com.cafeteria.admin.CancelShiftActivity;
-import com.cafeteria.admin.OperatingHoursActivity;
+import com.cafeteria.admin.EnterOperatingHoursActivity;
 import com.cafeteria.admin.SpinnerAdapter;
 import com.cafeteria.session_manager.UserSession;
 import com.cafeteria.student.ActivityEnterAvaialibility;
@@ -39,6 +41,8 @@ public class AdminDashboardActivity extends HomeBaseActivity {
 	private TextView tvCancel;
 	private TextView tvOperatingHours;
 	private TextView tvCancelOperatingHours;
+	private TextView tvOperatingHoursSchedule;
+	
 	private ProgressDialog pd;
 	protected ArrayList<String> listOfCafe;
 
@@ -46,13 +50,8 @@ public class AdminDashboardActivity extends HomeBaseActivity {
 	@SuppressLint("NewApi")
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		
 		sideMenuTitles = getResources().getStringArray(R.array.side_menu_admin);
 		setContentView(R.layout.activity_admin_dashboard);
-		
-		
-	       
 		init();
 		//fetchCafeData();
 		
@@ -98,6 +97,11 @@ public class AdminDashboardActivity extends HomeBaseActivity {
 		tvOperatingHours.setOnClickListener(this);
 		tvCancelOperatingHours=(TextView) findViewById(R.id.tvCancelOperatingHours);
 		tvCancelOperatingHours.setOnClickListener(this);
+		
+		tvOperatingHoursSchedule=(TextView) findViewById(R.id.tvOperatingHoursSchedule);
+		tvOperatingHoursSchedule.setOnClickListener(this);
+		
+		
 	}
 	
 	@Override
@@ -112,9 +116,14 @@ public class AdminDashboardActivity extends HomeBaseActivity {
 			startActivity(new Intent(this, CancelShiftActivity.class));
 			break;
 		case R.id.tvOperatingHours:
-			startActivity(new Intent(this, OperatingHoursActivity.class));
+			startActivity(new Intent(this, EnterOperatingHoursActivity.class));
 			break;
 		case R.id.tvCancelOperatingHours:
+			startActivity(new Intent(this,CancelOperatingHoursActivity.class));
+			break;
+			
+		case R.id.tvOperatingHoursSchedule:
+			startActivity(new Intent(this,CafeOperatingScheduleActivity.class));
 			break;
 		}
 	}

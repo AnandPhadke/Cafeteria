@@ -80,7 +80,17 @@
         </activity>
        
          <activity
-            android:name="com.cafeteria.admin.OperatingHoursActivity"
+            android:name="com.cafeteria.admin.EnterOperatingHoursActivity"
+            android:screenOrientation="sensorPortrait" >
+        </activity>
+        
+         <activity
+            android:name="com.cafeteria.admin.CancelOperatingHoursActivity"
+            android:screenOrientation="sensorPortrait" >
+        </activity>
+        
+         <activity
+            android:name="com.cafeteria.admin.CafeOperatingScheduleActivity"
             android:screenOrientation="sensorPortrait" >
         </activity>
        

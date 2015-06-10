@@ -1,10 +1,13 @@
-package com.cafeteria.student;
+package com.cafeteria.admin;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -33,7 +36,8 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-public class ScheduleActivity extends Activity implements OnClickListener, OnPageChangeListener {
+public class CafeOperatingScheduleActivity extends Activity implements
+		OnClickListener, OnPageChangeListener {
 
 	private static final String TAG = "ScheduleActivity";
 	private ImageView ivPrev;
@@ -64,55 +68,83 @@ public class ScheduleActivity extends Activity implements OnClickListener, OnPag
 	}
 
 	private void downloadData() {
-		ParseQuery<ParseObject> query =ParseQuery.getQuery(Constant.CAFE_SCHEDULE);
-		//query.whereEqualTo("username",UserSession.getInstance(this).getUsername());
+		ParseQuery<ParseObject> query = ParseQuery.getQuery(Constant.CAFE);
+		// query.whereEqualTo("username",UserSession.getInstance(this).getUsername());
 		query.findInBackground(new FindCallback<ParseObject>() {
-			
+
 			@Override
 			public void done(List<ParseObject> results, ParseException e) {
-				if(e==null){
-					Log.v(getClass().getName(), "saved username   "+UserSession.getInstance(ScheduleActivity.this).getUsername());
+				if (e == null) {
+					Log.v(getClass().getName(), "cafe size " + results.size());
 					for (ParseObject x : results) {
-					//	Log.v(getClass().getName(), "date   "+x.getDate("schedule_date").toString());
-					//	Log.v(getClass().getName(), "username   "+x.getString("username"));
-						
-						if(x.getString("username")!=null){
-						if(x.getString("username").equalsIgnoreCase(UserSession.getInstance(ScheduleActivity.this).getUsername())){
+
 						CafeteriaSchedule cafe = new CafeteriaSchedule();
 						cafe.cafe_name = x.getString("cafe_name");
-						if(x.getDate("schedule_date")!=null){
-							cafe.date=x.getDate("schedule_date");
-							cafe.calenderDate=Utils.DateToCalendar(x.getDate("schedule_date"));
+						if (x.getDate("schedule_date") != null) {
+							cafe.date = x.getDate("schedule_date");
+							cafe.calenderDate = Utils.DateToCalendar(x
+									.getDate("schedule_date"));
 						}
-							if(x.getInt("day")!=0)
-								cafe.day=x.getInt("day");
-						if(x.getDate("start_time")!=null)
-						cafe.start_time = Utils.DateToCalendar(x.getDate("start_time")).get(Calendar.HOUR_OF_DAY)+":"+Utils.DateToCalendar(x.getDate("start_time")).get(Calendar.MINUTE);
-						if(x.getDate("end_time")!=null)
-						cafe.end_time =  Utils.DateToCalendar(x.getDate("end_time")).get(Calendar.HOUR_OF_DAY)+":"+Utils.DateToCalendar(x.getDate("end_time")).get(Calendar.MINUTE);
+						if (x.getInt("day") != 0)
+							cafe.day = x.getInt("day");
+
+						if (x.getDate("start_time") != null)
+							cafe.start_time = Utils.DateToCalendar(
+									x.getDate("start_time")).get(
+									Calendar.HOUR_OF_DAY)
+									+ ":"
+									+ Utils.DateToCalendar(
+											x.getDate("start_time")).get(
+											Calendar.MINUTE);
+						if (x.getDate("end_time") != null)
+							cafe.end_time = Utils.DateToCalendar(
+									x.getDate("end_time")).get(
+									Calendar.HOUR_OF_DAY)
+									+ ":"
+									+ Utils.DateToCalendar(
+											x.getDate("end_time")).get(
+											Calendar.MINUTE);
+
 						data.add(cafe);
-						}
-						}
 					}
-					
-					Log.v(getClass().getName(), "size   "+data.size());
-					ArrayList<CafeteriaSchedule> currentMonthDayData = getCurrentMonthData(data,currentDay,currentMonth+1);
-					CafeteriaAdapter adapter = new CafeteriaAdapter(ScheduleActivity.this, currentMonthDayData);
+
+					Log.v(getClass().getName(), "size   " + data.size());
+					ArrayList<CafeteriaSchedule> currentMonthDayData = getCurrentMonthData(
+							data, currentDay, currentMonth + 1);
+					if (currentMonthDayData != null) {
+						HashSet hs = new HashSet(currentMonthDayData);
+						currentMonthDayData.clear();
+						currentMonthDayData.addAll(hs);
+					}
+
+					CafeteriaAdapter adapter = new CafeteriaAdapter(
+							CafeOperatingScheduleActivity.this,
+							currentMonthDayData);
 					lstData.setAdapter(adapter);
 				}
 			}
 		});
 	}
 
-	protected ArrayList<CafeteriaSchedule> getCurrentMonthData(ArrayList<CafeteriaSchedule> allData,int cDay,int setCurrentMonth) {
-		
+	protected ArrayList<CafeteriaSchedule> getCurrentMonthData(
+			ArrayList<CafeteriaSchedule> allData, int cDay, int setCurrentMonth) {
+
 		ArrayList<CafeteriaSchedule> currentMonthData = new ArrayList<CafeteriaSchedule>();
 		for (int i = 0; i < allData.size(); i++) {
-			Log.v(getClass().getName(), "day   "+cDay +"  date  "+(allData.get(i).calenderDate.get(Calendar.DATE)-1));
-			Log.v(getClass().getName(), "month   "+setCurrentMonth +"  monthDate  "+ (allData.get(i).calenderDate.get(Calendar.MONTH)+1));
+			Log.v(getClass().getName(),
+					"day   "
+							+ cDay
+							+ "  date  "
+							+ (allData.get(i).calenderDate.get(Calendar.DATE) - 1));
+			Log.v(getClass().getName(),
+					"month   "
+							+ setCurrentMonth
+							+ "  monthDate  "
+							+ (allData.get(i).calenderDate.get(Calendar.MONTH) + 1));
 
-			if(setCurrentMonth == (allData.get(i).calenderDate.get(Calendar.MONTH)+1)){
-				if(cDay==(allData.get(i).calenderDate.get(Calendar.DATE)-1))
+			if (setCurrentMonth == (allData.get(i).calenderDate
+					.get(Calendar.MONTH) + 1)) {
+				if (cDay == (allData.get(i).calenderDate.get(Calendar.DATE) - 1))
 					currentMonthData.add(allData.get(i));
 			}
 		}
@@ -183,9 +215,9 @@ public class ScheduleActivity extends Activity implements OnClickListener, OnPag
 				sheduleMonth--;
 			}
 		}
-		
+
 		onMonthChange = true;
-		
+
 		monthMaxDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 		monthMinDays = calendar.getActualMinimum(Calendar.DAY_OF_MONTH);
 		String monthName = new SimpleDateFormat("MMMM", Locale.getDefault())
@@ -230,7 +262,7 @@ public class ScheduleActivity extends Activity implements OnClickListener, OnPag
 		@Override
 		public Object instantiateItem(View container, int position) {
 			// Log.d("Tag", "instantiateItem  "+position);
-			TextView view = new TextView(ScheduleActivity.this);
+			TextView view = new TextView(CafeOperatingScheduleActivity.this);
 			view.setText(dates.get(position));
 			view.setTextSize(20);
 			view.setGravity(Gravity.CENTER);
@@ -305,19 +337,36 @@ public class ScheduleActivity extends Activity implements OnClickListener, OnPag
 
 	@Override
 	public void onClick(View v) {
-		
+
 		switch (v.getId()) {
-		
+
 		case R.id.ivNext:
 			showNextPreviousMonthDates(true);
-			ArrayList<CafeteriaSchedule> currentMonthDayData = getCurrentMonthData(data,scheduleDay,sheduleMonth);
-			CafeteriaAdapter adapter = new CafeteriaAdapter(ScheduleActivity.this, currentMonthDayData);
+			ArrayList<CafeteriaSchedule> currentMonthDayData = getCurrentMonthData(
+					data, scheduleDay, sheduleMonth);
+
+			if (currentMonthDayData != null) {
+				HashSet hs = new HashSet(currentMonthDayData);
+				currentMonthDayData.clear();
+				currentMonthDayData.addAll(hs);
+
+			}
+			
+			CafeteriaAdapter adapter = new CafeteriaAdapter(
+					CafeOperatingScheduleActivity.this, currentMonthDayData);
 			lstData.setAdapter(adapter);
 			break;
 		case R.id.ivPrev:
 			showNextPreviousMonthDates(false);
-			ArrayList<CafeteriaSchedule> currentMonthDayDataPrev = getCurrentMonthData(data,scheduleDay,sheduleMonth);
-			CafeteriaAdapter adapterPrev = new CafeteriaAdapter(ScheduleActivity.this, currentMonthDayDataPrev);
+			ArrayList<CafeteriaSchedule> currentMonthDayDataPrev = getCurrentMonthData(
+					data, scheduleDay, sheduleMonth);
+			if (currentMonthDayDataPrev != null) {
+				HashSet hs = new HashSet(currentMonthDayDataPrev);
+				currentMonthDayDataPrev.clear();
+				currentMonthDayDataPrev.addAll(hs);
+			}
+			CafeteriaAdapter adapterPrev = new CafeteriaAdapter(
+					CafeOperatingScheduleActivity.this, currentMonthDayDataPrev);
 			lstData.setAdapter(adapterPrev);
 			break;
 		}
@@ -325,19 +374,33 @@ public class ScheduleActivity extends Activity implements OnClickListener, OnPag
 
 	@Override
 	public void onPageScrollStateChanged(int day) {
-		
+
 	}
 
 	@Override
 	public void onPageScrolled(int arg0, float arg1, int arg2) {
-		
+
 	}
 
 	@Override
 	public void onPageSelected(int position) {
-		Log.v(TAG, "pos  "+position);
-		ArrayList<CafeteriaSchedule> currentMonthDayData = getCurrentMonthData(data,position+1,sheduleMonth);
-		CafeteriaAdapter adapter = new CafeteriaAdapter(ScheduleActivity.this, currentMonthDayData);
+		Log.v(TAG, "pos  " + position);
+		ArrayList<CafeteriaSchedule> currentMonthDayData = getCurrentMonthData(
+				data, position + 1, sheduleMonth);
+		if (currentMonthDayData != null) {
+			HashSet hs = new HashSet(currentMonthDayData);
+			currentMonthDayData.clear();
+			currentMonthDayData.addAll(hs);
+		}
+		
+		HashSet hs1 = new HashSet(currentMonthDayData);
+		currentMonthDayData.clear();
+		currentMonthDayData.addAll(hs1);
+		
+		CafeteriaAdapter adapter = new CafeteriaAdapter(
+				CafeOperatingScheduleActivity.this, currentMonthDayData);
+		
+		
 		lstData.setAdapter(adapter);
 	}
 

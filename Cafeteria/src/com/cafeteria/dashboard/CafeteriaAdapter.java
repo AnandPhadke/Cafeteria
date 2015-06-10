@@ -1,5 +1,7 @@
 package com.cafeteria.dashboard;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 import com.cafeteria.R;
@@ -30,6 +32,8 @@ public class CafeteriaAdapter extends BaseAdapter {
 		TextView tvTitle = (TextView)view.findViewById(R.id.tvTitle);
 		TextView tvSubtitle1 = (TextView)view.findViewById(R.id.tvSubtitle1);
 		tvTitle.setText(arrayListSchedule.get(position).cafe_name);
+		NumberFormat f = new DecimalFormat("00");
+		
 		tvSubtitle1.setText("start time : "+arrayListSchedule.get(position).start_time +"  end time : "+arrayListSchedule.get(position).end_time);
 		return view;
 	}

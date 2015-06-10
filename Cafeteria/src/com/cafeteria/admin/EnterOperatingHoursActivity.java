@@ -33,7 +33,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 
-public class OperatingHoursActivity extends Activity implements OnClickListener {
+public class EnterOperatingHoursActivity extends Activity implements OnClickListener {
 
 	private Spinner spinnerCafe;
 	protected String assignedCafe="";
@@ -90,7 +90,7 @@ public class OperatingHoursActivity extends Activity implements OnClickListener 
 			
 			@Override
 			public void onClick(View arg0) {
-				pd = Utils.showProgressDialog(OperatingHoursActivity.this);
+				pd = Utils.showProgressDialog(EnterOperatingHoursActivity.this);
 				ParseObject parseObject = new ParseObject(Constant.CAFE);
 				parseObject.put("cafe_name", ""+assignedCafe);
 				parseObject.put("is_holiday", true);
@@ -98,10 +98,10 @@ public class OperatingHoursActivity extends Activity implements OnClickListener 
 				
 				String schedule_date = "";
 				if(!etDate.getText().toString().equals(""))
-				schedule_date = etDate.getText().toString();  
+				schedule_date = etDate.getText().toString()+" 00:00";  
 				
 				
-				SimpleDateFormat  format = new SimpleDateFormat("dd-MM-yyyy");  
+				SimpleDateFormat  format = new SimpleDateFormat("dd-MM-yyyy HH:mm");  
 				Date s_date = null;
 				try {  
 				    s_date = format.parse(schedule_date);  
@@ -113,8 +113,8 @@ public class OperatingHoursActivity extends Activity implements OnClickListener 
 				
 				
 				String from_date = "";
-				if(!etDate.getText().toString().equals(""))
-				 from_date = etDate.getText().toString();  
+				if(!etFrom.getText().toString().equals(""))
+				 from_date = etFrom.getText().toString();  
 				SimpleDateFormat  from_format = new SimpleDateFormat("HH:mm");  
 				Date f_date = null;
 				try {  
@@ -123,12 +123,12 @@ public class OperatingHoursActivity extends Activity implements OnClickListener 
 					e.printStackTrace();
 				}
 				if(f_date!=null)
-					parseObject.put("schedule_date",f_date );
+					parseObject.put("start_time",f_date );
 				
 				String to_date = "";
-				if(!etDate.getText().toString().equals(""))
-				 to_date = etDate.getText().toString();  
-				SimpleDateFormat  to_format = new SimpleDateFormat("dd-MM-yyyy");  
+				if(!etTo.getText().toString().equals(""))
+				 to_date = etTo.getText().toString();  
+				SimpleDateFormat  to_format = new SimpleDateFormat("HH:mm");  
 				Date t_date = null;
 				try {  
 					t_date = to_format.parse(to_date);  
@@ -136,7 +136,7 @@ public class OperatingHoursActivity extends Activity implements OnClickListener 
 					e.printStackTrace();
 				}
 				if(t_date!=null)
-					parseObject.put("schedule_date",t_date );
+					parseObject.put("end_time",t_date );
 				
 				
 				parseObject.saveInBackground(new SaveCallback() {
@@ -147,7 +147,7 @@ public class OperatingHoursActivity extends Activity implements OnClickListener 
 						if(e==null){
 							
 						}else{
-							Toast.makeText(OperatingHoursActivity.this, "Error in adding Operating hours", Toast.LENGTH_SHORT).show();
+							Toast.makeText(EnterOperatingHoursActivity.this, "Error in adding Operating hours", Toast.LENGTH_SHORT).show();
 						}
 					}
 				});
@@ -175,10 +175,10 @@ public class OperatingHoursActivity extends Activity implements OnClickListener 
 							listOfCafe.clear();
 							listOfCafe.addAll(hs);
 					}
-					SpinnerAdapter<String> adapter = new SpinnerAdapter<String>(OperatingHoursActivity.this,android.R.layout.simple_list_item_1,listOfCafe);
+					SpinnerAdapter<String> adapter = new SpinnerAdapter<String>(EnterOperatingHoursActivity.this,android.R.layout.simple_list_item_1,listOfCafe);
 					spinnerCafe.setAdapter(adapter);
 				}else{
-					Toast.makeText(OperatingHoursActivity.this, "error in retrieving cafe", Toast.LENGTH_SHORT).show();
+					Toast.makeText(EnterOperatingHoursActivity.this, "error in retrieving cafe", Toast.LENGTH_SHORT).show();
 				}
 			}
 		});

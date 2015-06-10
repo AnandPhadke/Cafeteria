@@ -65,11 +65,11 @@
             <TextView
                 style="@style/DashboardButton"
                 android:contentDescription="@null"
-                android:drawableTop="@drawable/ic_action"
+                android:drawableTop="@drawable/cancel_calender"
                  android:textColor="@android:color/black" 
                  android:id="@+id/tvCancelOperatingHours"
                 android:text="Cancel operating \nhours"
-                android:visibility="invisible" />
+                 />
         </LinearLayout>
 
         <LinearLayout
@@ -77,11 +77,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="horizontal"
-            android:visibility="invisible" >
+            android:visibility="visible" >
 
             <TextView
                 style="@style/DashboardButton"
-                android:contentDescription="@null" />
+                android:contentDescription="@null"
+                android:drawableTop="@drawable/operating_hours"
+                 android:textColor="@android:color/black" 
+                 android:id="@+id/tvOperatingHoursSchedule"
+                android:text="Operating hours \nschedule"/>
 
             <View
                 android:layout_width="1px"

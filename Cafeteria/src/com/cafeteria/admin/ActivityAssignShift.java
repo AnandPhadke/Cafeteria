@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import android.app.Activity;
@@ -58,6 +59,8 @@ public class ActivityAssignShift extends Activity implements OnClickListener {
 	protected String assignedCafe="";
 	private Button btnAssign;
 	protected UserObject selectedUser;
+	protected int fromTime;
+	protected int toTime;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +104,12 @@ public class ActivityAssignShift extends Activity implements OnClickListener {
 						llAvailable.setVisibility(View.VISIBLE);
 						tvDate.setText(selectedUser.a_date);
 						tvFrom.setText(selectedUser.a_from);
+						try {
+						fromTime =Integer.parseInt(selectedUser.a_from.split(":")[0]);
 						tvTo.setText(selectedUser.a_to);
+						toTime =Integer.parseInt(selectedUser.a_to.split(":")[0]);
+						} catch (Exception e) {
+						}
 						btnAssign.setVisibility(View.VISIBLE);
 					}
 			}
@@ -290,6 +298,9 @@ public class ActivityAssignShift extends Activity implements OnClickListener {
 					listOfCafe = new ArrayList<String>();
 					for (ParseObject parseObject : objects) {
 							listOfCafe.add(parseObject.getString("cafe_name"));
+							HashSet hs = new HashSet(listOfCafe);
+							listOfCafe.clear();
+							listOfCafe.addAll(hs);
 					}
 					SpinnerAdapter<String> adapter = new SpinnerAdapter<String>(ActivityAssignShift.this,android.R.layout.simple_list_item_1,listOfCafe);
 					spinnerCafe.setAdapter(adapter);
@@ -334,7 +345,14 @@ public class ActivityAssignShift extends Activity implements OnClickListener {
 
 		@Override
 		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-			tvFrom.setText(hourOfDay + ":" + minute);
+			if(hourOfDay >= fromTime && hourOfDay<= toTime){
+				tvFrom.setText(hourOfDay + ":" + minute);
+			}else{
+				Toast.makeText(ActivityAssignShift.this, "Pick time within range only ", Toast.LENGTH_SHORT).show();
+			}
+			
+			
+			
 		}
 	};	
 
@@ -342,7 +360,13 @@ public class ActivityAssignShift extends Activity implements OnClickListener {
 
 		@Override
 		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-			tvTo.setText(hourOfDay + ":" + minute);
+			if(hourOfDay >= fromTime && hourOfDay<= toTime){
+				tvTo.setText(hourOfDay + ":" + minute);
+			}else{
+				Toast.makeText(ActivityAssignShift.this, "Pick time within range only ", Toast.LENGTH_SHORT).show();
+			}
+			
+			
 		}
 	};
 
